@@ -1,0 +1,40 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+
+package(default_visibility = ["//visibility:public"])
+
+buildifier(
+    name = "buildifier",
+    lint_mode = "warn",
+    mode = "check",
+    verbose = True,
+)
+
+cc_binary(
+    name = "example",
+    srcs = ["example.cc"],
+)
+
+cc_binary(
+    name = "sha256-hash",
+    srcs = ["wolfssl_example.c"],
+    deps = [
+        "//third_party/wolfssl:wolfssl",
+    ],
+)
+
+cc_library(
+    name = "my_lib",
+    srcs = ["my_lib.cc"],
+    hdrs = ["my_lib.h"],
+)
+
+cc_test(
+    name = "gtest_test",
+    srcs = ["gtest_test.cc"],
+    deps = [
+        ":my_lib",
+        "@gtest",
+        "@gtest//:gtest_main",
+    ],
+)
